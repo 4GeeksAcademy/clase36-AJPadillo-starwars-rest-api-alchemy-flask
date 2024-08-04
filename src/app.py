@@ -65,18 +65,24 @@ def get_users():
     users = User.query.all()
     serialized_user = []
     for person in users:
-        serialized_user.append(person.serialize())
-    return jsonify(serialized_user), 200 #Serializar a cada usuario de todos los usuarios
+        serialized_user.append(person.serialize()) #Serializar a cada usuario de todos los usuarios
+    return jsonify(serialized_user), 200
 
-@app.route('/users/favorites', methods=['GET'])
+@app.route('/users/favorites', methods=['GET']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
 def get_user_favorites():
     user_id = request.args.get('user_id')
     user = User.query.get(user_id)
     if not user:
         return jsonify({"message": "User not found"}), 404
+    favorite_planets = []
+    favorite_people = []
+    for planet in user.favorite_planets:
+        favorite_planets.append(planet.serialize())
+    for person in user.favorite_people:
+        favorite_people.append(person.serialize())
     favorites = {
-        "favorite_planets": [planet.serialize() for planet in user.favorite_planets],
-        "favorite_people": [person.serialize() for person in user.favorite_people]
+        "favorite_planets": favorite_planets,
+        "favorite_people": favorite_people
     }
     return jsonify(favorites), 200
 
