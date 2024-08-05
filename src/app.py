@@ -1,7 +1,6 @@
 import os
-from flask import Flask, request, jsonify, url_for
+from flask import Flask, request, jsonify
 from flask_migrate import Migrate
-from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
@@ -33,10 +32,8 @@ def sitemap():
 @app.route('/people', methods=['GET'])
 def get_people():
     people = People.query.all()
-    serialized_people = []
-    for person in people:
-        serialized_people.append(person.serialize())
-    return jsonify(serialized_people), 200
+    all_people = list(map(lambda x: x.serialize(), people))
+    return jsonify(all_people), 200
 
 @app.route('/people/<int:people_id>', methods=['GET'])
 def get_person(people_id):
@@ -48,10 +45,8 @@ def get_person(people_id):
 @app.route('/planets', methods=['GET'])
 def get_planets():
     planets = Planet.query.all()
-    serialized_planet = []
-    for person in planets:
-        serialized_planet.append(person.serialize())
-    return jsonify(serialized_planet), 200
+    all_planets = list(map(lambda x: x.serialize(), planets))
+    return jsonify(all_planets), 200
 
 @app.route('/planets/<int:planet_id>', methods=['GET'])
 def get_planet(planet_id):
@@ -63,10 +58,8 @@ def get_planet(planet_id):
 @app.route('/users', methods=['GET'])
 def get_users():
     users = User.query.all()
-    serialized_user = []
-    for person in users:
-        serialized_user.append(person.serialize()) #Serializar a cada usuario de todos los usuarios
-    return jsonify(serialized_user), 200
+    all_users = list(map(lambda x: x.serialize(), users))
+    return jsonify(all_users), 200
 
 @app.route('/users/favorites', methods=['GET']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
 def get_user_favorites():
@@ -74,12 +67,10 @@ def get_user_favorites():
     user = User.query.get(user_id)
     if not user:
         return jsonify({"message": "User not found"}), 404
-    favorite_planets = []
-    favorite_people = []
-    for planet in user.favorite_planets:
-        favorite_planets.append(planet.serialize())
-    for person in user.favorite_people:
-        favorite_people.append(person.serialize())
+
+    favorite_planets = list(map(lambda planet: planet.serialize(), user.favorite_planets))
+    favorite_people = list(map(lambda person: person.serialize(), user.favorite_people))
+    
     favorites = {
         "favorite_planets": favorite_planets,
         "favorite_people": favorite_people
