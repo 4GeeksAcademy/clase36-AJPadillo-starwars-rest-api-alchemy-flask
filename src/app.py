@@ -67,19 +67,18 @@ def get_user_favorites():
     user = User.query.get(user_id)
     if not user:
         return jsonify({"message": "User not found"}), 404
-
     favorite_planets = list(map(lambda planet: planet.serialize(), user.favorite_planets))
     favorite_people = list(map(lambda person: person.serialize(), user.favorite_people))
-    
     favorites = {
         "favorite_planets": favorite_planets,
         "favorite_people": favorite_people
     }
+
     return jsonify(favorites), 200
 
-@app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
+@app.route('/favorite/planet/<int:planet_id>', methods=['POST']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
 def add_favorite_planet(planet_id):
-    user_id = request.json.get('user_id')
+    user_id = request.args.get('user_id')
     user = User.query.get(user_id)
     planet = Planet.query.get(planet_id)
     if user and planet:
@@ -88,9 +87,10 @@ def add_favorite_planet(planet_id):
         return jsonify({"message": "Planet added to favorites"}), 200
     return jsonify({"message": "User or Planet not found"}), 404
 
-@app.route('/favorite/people/<int:people_id>', methods=['POST'])
+
+@app.route('/favorite/people/<int:people_id>', methods=['POST']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
 def add_favorite_people(people_id):
-    user_id = request.json.get('user_id')
+    user_id = request.args.get('user_id')
     user = User.query.get(user_id)
     person = People.query.get(people_id)
     if user and person:
@@ -99,9 +99,9 @@ def add_favorite_people(people_id):
         return jsonify({"message": "Person added to favorites"}), 200
     return jsonify({"message": "User or Person not found"}), 404
 
-@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
 def remove_favorite_planet(planet_id):
-    user_id = request.json.get('user_id')
+    user_id = request.args.get('user_id')
     user = User.query.get(user_id)
     planet = Planet.query.get(planet_id)
     if user and planet:
@@ -110,9 +110,9 @@ def remove_favorite_planet(planet_id):
         return jsonify({"message": "Planet removed from favorites"}), 200
     return jsonify({"message": "User or Planet not found"}), 404
 
-@app.route('/favorite/people/<int:people_id>', methods=['DELETE'])
+@app.route('/favorite/people/<int:people_id>', methods=['DELETE']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
 def remove_favorite_people(people_id):
-    user_id = request.json.get('user_id')
+    user_id = request.args.get('user_id')
     user = User.query.get(user_id)
     person = People.query.get(people_id)
     if user and person:
