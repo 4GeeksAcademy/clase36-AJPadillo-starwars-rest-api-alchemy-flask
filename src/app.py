@@ -73,7 +73,6 @@ def get_user_favorites():
         "favorite_planets": favorite_planets,
         "favorite_people": favorite_people
     }
-
     return jsonify(favorites), 200
 
 @app.route('/favorite/planet/<int:planet_id>', methods=['POST']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
@@ -86,7 +85,6 @@ def add_favorite_planet(planet_id):
         db.session.commit()
         return jsonify({"message": "Planet added to favorites"}), 200
     return jsonify({"message": "User or Planet not found"}), 404
-
 
 @app.route('/favorite/people/<int:people_id>', methods=['POST']) # ?user_id=1 -----> Esto se agrega al final de la ruta para indicar el usuario a realizar la consulta
 def add_favorite_people(people_id):
