@@ -2,14 +2,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-# Tabla intermedia para la relación muchos a muchos entre usuarios y planetas favoritos
 favorite_planets = db.Table(
     'favorite_planets',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('planet_id', db.Integer, db.ForeignKey('planet.id'), primary_key=True)
 )
 
-# Tabla intermedia para la relación muchos a muchos entre usuarios y personajes favoritos
 favorite_people = db.Table(
     'favorite_people',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
